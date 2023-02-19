@@ -86,7 +86,6 @@ Request Body:
 Unfortunately, due to the way I have designed the application, I am unable to mock the different dependencies for each file and test them. For future considerations, I would have binded the dependencies into the relevant functions so that I would be able to mock them.
 
 ## Future Considerations
-
 There are some considerations that have not been implemented in this project
 1. Returning relevant messages when the student/teacher is not in the database. For example, when a teacher wants to suspend a student, the application should return a 404 status, mentioning that the user has not been admitted in the system
 2. I would change my design and bind the dependencies to each file in order to be able to test them.
