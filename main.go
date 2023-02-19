@@ -5,16 +5,16 @@ import (
 	"log"
 	"net/http"
 	"github.com/gorilla/mux"
-	"myapp/handlers"
+	"myapp/controller"
 )
 
 func handleRequests() {
 
 	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/api/register", teacherHandler.RegisterStudents).Methods("POST")
-	myRouter.HandleFunc("/api/commonstudents", teacherHandler.GetCommonStudents).Methods("GET")
-	myRouter.HandleFunc("/api/suspend", teacherHandler.SuspendStudent).Methods("POST")
-	myRouter.HandleFunc("/api/retrievefornotification", teacherHandler.GetStudentsReceiveNotifications).Methods("POST")
+	myRouter.HandleFunc("/api/register", teacherController.RegisterStudents).Methods("POST")
+	myRouter.HandleFunc("/api/commonstudents", teacherController.GetCommonStudents).Methods("GET")
+	myRouter.HandleFunc("/api/suspend", teacherController.SuspendStudent).Methods("POST")
+	myRouter.HandleFunc("/api/retrievefornotification", teacherController.GetStudentsReceiveNotifications).Methods("POST")
 	log.Fatal(http.ListenAndServe(":8081", myRouter))
 }
 

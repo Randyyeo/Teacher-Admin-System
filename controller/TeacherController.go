@@ -1,4 +1,4 @@
-package teacherHandler
+package teacherController
 
 import (
     "encoding/json"
@@ -20,7 +20,7 @@ func RegisterStudents(w http.ResponseWriter, r *http.Request) {
 	if result {
 		w.WriteHeader(http.StatusNoContent)
 	} else {
-		http.Error(w, "Failed to register", http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 }
 
@@ -38,7 +38,7 @@ func GetCommonStudents(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(students)
 	} else {
-		http.Error(w, "Failed to get common students", http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 }
 
@@ -54,7 +54,7 @@ func SuspendStudent(w http.ResponseWriter, r *http.Request) {
 	if result {
 		w.WriteHeader(http.StatusNoContent)
 	} else {
-		http.Error(w, "Failed to update", http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 }
 
@@ -73,6 +73,6 @@ func GetStudentsReceiveNotifications(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
 		json.NewEncoder(w).Encode(response)
 	} else {
-		http.Error(w, "Failed to retrieve students", http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 }

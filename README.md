@@ -1,71 +1,94 @@
-# Bank Account
+# Teacher Admin System
 
-Simple banking system that handles operations on bank accounts. At the moment, the project only is capable of three features:
-- Depositing an amount
-- Withdrawing an amount
-- Printing the account statement
+This application is an admin System for teachers where they can perform administrative functions for their students. Teachers and students are identified by their email addresses. The 4 main functions that teachers can perform are:
+- Registering students to a specified teacher
+- Retrieving a list of common students given a list of teachers
+- Suspend a specified student
+- Retrieve a list of students who can receive a notification
 
-All user inputs will be done through the command line.
 
 ## Design Architecture
 
-The application is designed using an MVC design pattern. The view portion comes from the `App.py` which is where the application is running from. By the user's interaction with the View, different handlers (Controller layer) will be called. For example, if the user enters 'd' into the command line, the `DepositHandler` will be called where the business logic lies within it. It then updates the Model components, a.k.a. User, by depositing or withdrawing money.
+The application is designed using an MVC design pattern. The view portion comes from the `main.go` which is where the application is running from. The different functions in `TeacherController` will be called based on the endpoint called by the user, for e.g. `/api/register`. By the user's interaction with the View, different service functions will be called. For example, when the user calls an API endpoint for e.g. `/api/register`, the `TeacherService.RegisterStudents` will be called where the business logic lies within it. It then updates the database through the dao layer, `TeacherDao`.
 
-In the `src` folder, it contains 4 folders:
-1. Constants -> containing all the constant values
-2. Handlers -> contain the different handlers to handle different business logic
-3. Models -> contain enum classes as well as our User class to maintain the states of the user
-4. Utils -> Different util functions to handle certain common functions
+In the project, it contains 5 folders:
+1. controller -> how the endpoint will be handled
+2. dao -> layer to interact with the database
+3. db -> connection to the database
+4. models -> different structs used in the application
+5. service -> service layer to interact with the dao layer
 
-## Launch virtual environment
+## Setting up environment
 
-To ensure this application can run on all operating systems, the instructions below will showcase how it can be ran on a virtual environment. To create a virtual environment for this project, run the following command:
+Please ensure that you have Go installed and updated to the latest version. You can check by typing this:
 ```
-# MacOS
-python3 -m venv venv
-# Windows/Linux
-python -m venv venv
+go version
 ```
 
-This will create a `venv` folder where you can launch the virtual environment. To launch it:
+There are certain third-party libraries that are used in these applications. They are specified in the `go.mod` and `go.sum` files. They should automatically be installed once you run the application. If in the case this does not happen, please run the following commands:
 ```
-source venv/bin/activate
-```
-
-You should see a (venv) in your command line. To exit the virtual environment, run: 
-```
-deactivate
+go get github.com/joho/godotenv
+go get github.com/go-sql-driver/mysql
+go get github.com/gorilla/mux v1.8.0
 ```
 
-## Installation
-
-To install the dependencies for the project, run the following command:
-
+## Database Setup
+You will need a .env file in order to run this application correctly. Please correct one and add the following variables to your .env file. It should be in the root folder of the project. Please ensure that your `DB_NAME` is the same as the database you have created on your local machine. 
 ```
-pip install -r requirements.txt
+DB_USER=
+DB_PASSWORD=
+DB_HOST=
+DB_PORT=
+DB_NAME=
 ```
-
-## Usage
 
 To run the project, use the following command in the terminal:
 ```
-python src/app.py
+go run main.go
 ```
 
+## Using
+To try the different endpoints, simply use postman or whatever other tool you have, to call the endpoints.
+### Register Students
+```
+/api/register -> POST
+Request Body:
+{
+    "teacher": "teacher5@gmail.com",
+    "students": []
+}
+```
+
+### Get Common Students
+```
+/api/commonstudents?teacher=teacher@gmail.com -> GET
+```
+
+### Suspend
+```
+/api/suspend -> POST
+Request Body:
+{
+    "student": "student1@gmail.com"
+}
+```
+
+### Retrieve student list for notification
+```
+/api/retrievefornotification -> POST
+Request Body:
+{
+    "teacher": "teacher5@gmail.com",
+    "notification": "Hello @student1@gmail.com @student2@gmail.com"
+}
+```
 ## Tests
+Unfortunately, due to the way I have designed the application, I am unable to mock the different dependencies for each file and test them. For future considerations, I would have binded the dependencies into the relevant functions so that I would be able to mock them.
 
-To run the unit tests provided:
-```
-# There are 3 folders to run the tests
+## Future Considerations
 
-pytest tests/handlers_tests
-pytest tests/models_tests
-pytest tests/utils_tests
-```
-
-## Assumptions
-
-There are a few assumptions in this project:
-1. It will give an error if an invalid input such as "A" is entered into the commmand line when the user is prompted for an action.
-2. When entering an amount for the deposit/withdraw, the user cannot enter invalid types such as letters as well as numbers with more than 2 decimal points. It will throw an error and ask the user to select an action again.
+There are some considerations that have not been implemented in this project
+1. Returning relevant messages when the student/teacher is not in the database. For example, when a teacher wants to suspend a student, the application should return a 404 status, mentioning that the user has not been admitted in the system
+2. I would change my design and bind the dependencies to each file in order to be able to test them.
+3. Add integration tests to test the endpoints
 
