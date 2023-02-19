@@ -46,6 +46,7 @@ To run the project, use the following command in the terminal:
 ```
 go run main.go
 ```
+The application is running on http://localhost:8081
 
 ## Using
 To try the different endpoints, simply use postman or whatever other tool you have, to call the endpoints.
